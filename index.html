@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TABLERO DE CONTROL – ALTO RENDIMIENTO CUNDINAMARCA</title>
+<style>
+/* Colores bandera de Cundinamarca: azul celeste, amarillo tostado y punzó */
+:root{--az:#4aa8e0;--azd:#0b4f8a;--am:#e2a41a;--rj:#c8102e;--navy:#0a2540;--bg:#eef3f9;--card:#fff;--tx:#12263f;--mut:#5d708a;--bd:#d9e3f0;--ok:#16a05a}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:radial-gradient(circle at 10% 0,#dcecfa,transparent 40%),radial-gradient(circle at 100% 20%,#fdf0d3,transparent 35%),var(--bg);color:var(--tx);text-transform:uppercase;letter-spacing:.2px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+header{background:linear-gradient(135deg,var(--navy),var(--azd) 60%,var(--az));padding:18px 28px 22px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;position:relative;box-shadow:0 8px 30px rgba(10,37,64,.35)}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:7px;background:linear-gradient(90deg,var(--az) 33%,var(--am) 33% 66%,var(--rj) 66%)}
+.logo{width:160px;height:76px;background:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#677;font-size:.66rem;text-align:center;padding:5px;box-shadow:0 0 0 3px rgba(255,255,255,.35),0 6px 18px rgba(0,0,0,.3);white-space:pre-line}
+.logo img{max-width:100%;max-height:100%;object-fit:contain}
+.tit{flex:1;text-align:center;min-width:260px}
+.tit h1{margin:0;font-size:clamp(1.3rem,2.6vw,2.2rem);font-weight:900;color:#fff;letter-spacing:2px;text-shadow:0 0 18px rgba(74,168,224,.9),0 3px 0 rgba(0,0,0,.25)}
+.tit h1 b{color:var(--am);text-shadow:0 0 16px rgba(226,164,26,.8)}
+.tit p{margin:8px 0 0;color:#cfe6f8;font-size:.8rem;font-weight:700;letter-spacing:3px}
+main{padding:22px 26px;max-width:1450px;margin:auto}
+.bar-f{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;background:var(--card);padding:12px;border-radius:14px;border:1px solid var(--bd);box-shadow:0 4px 14px rgba(11,79,138,.08)}
+.bar-f select,.bar-f input{padding:10px 12px;border:2px solid var(--bd);border-radius:10px;background:#fff;color:var(--tx);font-size:.8rem;font-weight:600;text-transform:uppercase;transition:.2s}
+.bar-f select:hover,.bar-f input:hover,.bar-f select:focus,.bar-f input:focus{border-color:var(--az);box-shadow:0 0 0 4px rgba(74,168,224,.25);outline:0}
+.bar-f select.act{border-color:var(--am);background:#fff8e6;box-shadow:0 0 14px rgba(226,164,26,.6)}
+.bar-f input{flex:1;min-width:170px}
+button{padding:10px 15px;border:0;border-radius:10px;color:#fff;cursor:pointer;font-size:.78rem;font-weight:800;letter-spacing:.8px;background:linear-gradient(135deg,var(--azd),var(--az));transition:.2s;text-transform:uppercase}
+button:hover{transform:translateY(-2px);box-shadow:0 0 18px rgba(74,168,224,.8)}
+button.y{background:linear-gradient(135deg,#b97f06,var(--am))}button.y:hover{box-shadow:0 0 18px rgba(226,164,26,.9)}
+button.r{background:linear-gradient(135deg,#8f0a20,var(--rj))}button.r:hover{box-shadow:0 0 18px rgba(200,16,46,.8)}
+button.g{background:#fff;color:var(--azd);border:2px solid var(--bd)}
+#estado{font-size:.7rem;color:var(--mut);font-weight:700}
+#chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;min-height:8px}
+.chip{background:var(--navy);color:#fff;border-radius:99px;padding:6px 12px;font-size:.72rem;font-weight:800;cursor:pointer;border-left:5px solid var(--am);transition:.2s}
+.chip:hover{background:var(--rj);box-shadow:0 0 14px rgba(200,16,46,.7)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:14px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s;box-shadow:0 4px 14px rgba(11,79,138,.08)}
+.card::before{content:"";position:absolute;left:0;top:0;right:0;height:5px;background:linear-gradient(90deg,var(--az),var(--am),var(--rj))}
+.card:hover{transform:translateY(-5px);border-color:var(--az);box-shadow:0 0 0 2px rgba(74,168,224,.5),0 12px 34px rgba(74,168,224,.55)}
+.kpi:nth-child(3n+2):hover{border-color:var(--am);box-shadow:0 0 0 2px rgba(226,164,26,.55),0 12px 34px rgba(226,164,26,.55)}
+.kpi:nth-child(3n):hover{border-color:var(--rj);box-shadow:0 0 0 2px rgba(200,16,46,.45),0 12px 34px rgba(200,16,46,.45)}
+.kpi b{display:block;font-size:2.3rem;font-weight:900;background:linear-gradient(135deg,var(--azd),var(--az));-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:4px}
+.kpi:nth-child(3n+2) b{background:linear-gradient(135deg,#a26b00,var(--am));-webkit-background-clip:text;background-clip:text}
+.kpi:nth-child(3n) b{background:linear-gradient(135deg,#7a0719,var(--rj));-webkit-background-clip:text;background-clip:text}
+.kpi span{color:var(--mut);font-size:.7rem;font-weight:800;letter-spacing:.8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:16px;margin-bottom:18px}
+h2{margin:6px 0 14px;font-size:.88rem;font-weight:900;color:var(--azd);letter-spacing:1.2px}
+h2 small{color:var(--mut);font-weight:700}
+.bar{display:grid;grid-template-columns:125px 1fr 34px;gap:8px;align-items:center;margin:7px 0;font-size:.7rem;font-weight:700;padding:3px 5px;border-radius:8px;transition:.2s}
+.bar.k{cursor:pointer}.bar.k:hover{background:#eaf4fc;box-shadow:0 0 14px rgba(74,168,224,.55);transform:translateX(3px)}
+.bar.sel{background:#fff4d6;box-shadow:inset 4px 0 0 var(--rj)}
+.bar.dim{opacity:.42}.bar.dim:hover{opacity:1}
+.bar .l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .t{background:#e6edf6;border-radius:6px;height:16px;overflow:hidden;display:flex}
+.bar .t i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--azd),var(--az));transition:width .5s}
+.bar .t i.am{background:linear-gradient(90deg,#b97f06,var(--am))}.bar .t i.rj{background:linear-gradient(90deg,#8f0a20,var(--rj))}
+.bar:hover .t i{filter:brightness(1.15) drop-shadow(0 0 5px currentColor)}
+.leg{font-size:.65rem;color:var(--mut);font-weight:800}
+.tw{overflow-x:auto;max-height:520px;overflow-y:auto;border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:.72rem;font-weight:600}
+th{background:var(--navy);color:#fff;text-align:left;padding:11px 10px;position:sticky;top:0;letter-spacing:1px;font-size:.68rem}
+td{padding:9px 10px;border-bottom:1px solid var(--bd);white-space:nowrap}
+tbody tr{transition:.15s}tbody tr:hover{background:#eaf4fc;box-shadow:inset 5px 0 0 var(--am)}
+td.fl{cursor:pointer;color:var(--azd);font-weight:800}td.fl:hover{background:var(--az);color:#fff;box-shadow:0 0 12px var(--az)}
+td.fl.sel{background:var(--am);color:#000}
+.pill{padding:3px 10px;border-radius:99px;font-size:.7rem;color:#fff;font-weight:900}
+.ver{padding:5px 10px;font-size:.65rem}
+#modal{position:fixed;inset:0;background:rgba(10,37,64,.7);display:none;align-items:center;justify-content:center;padding:16px;z-index:9}
+#modal .box{background:#fff;max-width:780px;width:100%;max-height:88vh;overflow:auto;border-radius:18px;padding:24px;border-top:8px solid var(--am);box-shadow:0 0 40px rgba(74,168,224,.7);text-transform:none}
+#modal h3{margin-top:0;color:var(--azd);text-transform:uppercase}#modal h4{margin:14px 0 4px;color:var(--rj);text-transform:uppercase}#modal p{margin:3px 0;white-space:pre-wrap;font-size:.9rem}
+#modal a{color:var(--azd);font-weight:700}
+.err{background:#fdecea;color:#8a1f17;padding:12px;border-radius:10px;margin-bottom:14px;display:none;text-transform:none;font-weight:600}
+.po{display:none}
+@media print{
+ @page{size:A4 landscape;margin:9mm}
+ body{background:#fff}.no{display:none!important}.po{display:block!important}
+ header{padding:10px 16px;box-shadow:none}.logo{width:110px;height:52px}
+ .card,.card:hover{box-shadow:none;transform:none;break-inside:avoid;border:1px solid #ccd}
+ main{padding:8px 0}.grid{grid-template-columns:1fr 1fr}.kpis{grid-template-columns:repeat(4,1fr)}
+ .tw{max-height:none;overflow:visible}th{position:static}td{white-space:normal}
+ .bar.dim{opacity:1}
+ .po{font-size:.75rem;font-weight:800;margin-bottom:8px;color:var(--azd)}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><img src="Logos/logo-observatorio.png" alt="Observatorio" onerror="this.replaceWith('LOGO OBSERVATORIO\n(Logos/logo-observatorio)')"></div>
+  <div class="tit">
+    <h1>TABLERO DE CONTROL <b>· ALTO RENDIMIENTO ·</b></h1>
+    <p>VISITAS TÉCNICO ADMINISTRATIVAS A ENTRENAMIENTOS · GRUPO DE ENLACES DE LIGAS DEPORTIVAS · CUNDINAMARCA</p>
+  </div>
+  <div class="logo"><img src="Logos/logo-alto-rendimiento.png" alt="Alto Rendimiento" onerror="this.replaceWith('LOGO ALTO RENDIMIENTO\n(Logos/logo-alto-rendimiento)')"></div>
+</header>
+<main>
+  <div class="err" id="err"></div>
+  <div class="po" id="pfil"></div>
+  <div class="bar-f no">
+    <select id="fDep"></select><select id="fMet"></select><select id="fCiu"></select><select id="fFas"></select>
+    <input id="fTxt" type="search" placeholder="BUSCAR ENTRENADOR, SEDE, TEXTO…">
+    <button class="g" id="bLimpiar">✕ LIMPIAR</button>
+    <button id="bAct">⟳ ACTUALIZAR</button>
+    <button class="y" id="bPdfF">⬇ PDF CON FILTROS</button>
+    <button class="r" id="bPdfS">⬇ PDF SIN FILTROS</button>
+    <span id="estado">CARGANDO…</span>
+  </div>
+  <div id="chips" class="no"></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="grid">
+    <div class="card"><h2>VISITAS POR DEPORTE <small>· CLIC PARA FILTRAR</small></h2><div id="cDep"></div></div>
+    <div class="card"><h2>VISITAS POR METODÓLOGO <small>· CLIC PARA FILTRAR</small></h2><div id="cMet"></div></div>
+    <div class="card"><h2>VISITAS POR CIUDAD / MUNICIPIO <small>· CLIC PARA FILTRAR</small></h2><div id="cCiu"></div></div>
+    <div class="card"><h2>FASE DEL PLAN <small>· CLIC PARA FILTRAR</small></h2><div id="cFas"></div></div>
+    <div class="card"><h2>ASISTENCIA POR DEPORTE <small>· CLIC PARA FILTRAR</small></h2><div id="cAsi"></div><div class="leg"><span style="color:var(--rj)">■</span> MUJERES &nbsp; <span style="color:var(--az)">■</span> HOMBRES</div></div>
+    <div class="card"><h2>CALIFICACIÓN PROMEDIO (1–5)</h2><div id="cCal"></div></div>
+  </div>
+  <div class="card">
+    <h2>DETALLE DE VISITAS <small>· CLIC EN DEPORTE, CIUDAD, METODÓLOGO O FASE PARA FILTRAR · «VER» ABRE EL INFORME</small></h2>
+    <div class="tw"><table><thead><tr><th>FECHA</th><th>DEPORTE</th><th>MODALIDAD</th><th>CIUDAD</th><th>METODÓLOGO</th><th>ENTRENADOR</th><th>FASE</th><th>M</th><th>H</th><th>CUMPL.</th><th class="no"></th></tr></thead><tbody id="tb"></tbody></table></div>
+  </div>
+</main>
+<div id="modal"><div class="box" id="mbox"></div></div>
+
+<script>
+const SHEET_ID="1ocpMJ37sNtkSBD1pH8bBv_9pCPyn20perrjMA3joo5g";
+const URL_CSV=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+const REFRESCO_MIN=5;
+const CLAVES={ts:"marca temporal",metodologo:"nombres y apellidos del metodolog",deporte:"deporte",modalidad:"modalidad",ciudad:"ciudad y/o municipio",sede:"sede del entrenamiento",entrenador:"nombres y apellidos del entrenador",fecha:"fecha en la que se realiza",pre:"integran la preseleccion",muj:"atletas mujeres",hom:"atletas hombres",fase:"en que etapa o fase",plan:"tipo o sistema de planificacion",micro:"tipo de microciclo",cumpl:"cumplimiento del objetivo",ind_ent:"entrenador asistio con la indumentaria",ind_atl:"atletas asistieron con la indumentaria",esc:"escenario o la sede",impl:"implementacion deportiva",pos:"aspectos positivos",neg:"aspectos negativos",rec:"recomendaciones generales",foto_sede:"fotografias de la sede",foto_met:"presencia del metodolog"};
+const $=id=>document.getElementById(id);
+const norm=s=>(s||"").toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\s+/g," ").trim();
+const num=v=>{const n=parseFloat((v||"").toString().replace(",","."));return isNaN(n)?null:n};
+const avg=a=>{a=a.filter(x=>x!==null);return a.length?a.reduce((x,y)=>x+y,0)/a.length:null};
+const f1=n=>n===null?"–":n.toFixed(1);
+const esc=s=>(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const cap=s=>(s||"").trim().toLowerCase().replace(/(^|\s)\S/g,c=>c.toUpperCase());
+function parseCSV(t){const rows=[];let r=[],c="",q=false;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch==='"'){if(t[i+1]==='"'){c+='"';i++}else q=false}else c+=ch}else if(ch==='"')q=true;else if(ch===','){r.push(c);c=""}else if(ch==='\n'){r.push(c);rows.push(r);r=[];c=""}else if(ch!=='\r')c+=ch}if(c||r.length){r.push(c);rows.push(r)}return rows}
+function parseFecha(s){const m=(s||"").match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);return m?new Date(+m[3],+m[2]-1,+m[1]):null}
+const fmtFecha=d=>d?d.toLocaleDateString("es-CO"):"–";
+
+let DATA=[];
+let F={deporte:"",metodologo:"",ciudad:"",fase:""};
+const NOM={deporte:"DEPORTE",metodologo:"METODÓLOGO",ciudad:"CIUDAD",fase:"FASE"};
+const SEL={deporte:"fDep",metodologo:"fMet",ciudad:"fCiu",fase:"fFas"};
+
+/* ===== CONEXIÓN A GOOGLE SHEETS (3 métodos, se prueban en orden) ===== */
+// 1) JSONP vía <script>: no depende de CORS, funciona incluso abriendo el HTML desde el disco
+function viaScript(){return new Promise((res,rej)=>{
+  const cb="gv_"+Date.now(),s=document.createElement("script");
+  const fin=()=>{clearTimeout(to);delete window[cb];s.remove()};
+  const to=setTimeout(()=>{fin();rej(new Error("Google no respondió: la hoja parece no ser pública"))},15000);
+  window[cb]=r=>{fin();
+    if(!r||r.status!=="ok"){rej(new Error((r&&r.errors&&r.errors[0]&&(r.errors[0].detailed_message||r.errors[0].message))||"respuesta inválida"));return}
+    let cols=r.table.cols.map(c=>c.label||"");
+    const rows=r.table.rows.map(rw=>(rw.c||[]).map(c=>c?(c.f!=null?String(c.f):(c.v!=null?String(c.v):"")):""));
+    if(cols.filter(Boolean).length<5&&rows.length)cols=rows.shift();
+    res([cols,...rows])};
+  s.onerror=()=>{fin();rej(new Error("no se pudo cargar el script de Google"))};
+  s.src=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:${cb}&headers=1&_=${Date.now()}`;
+  document.head.appendChild(s)})}
+// 2) Descarga CSV directa
+const viaCSV=()=>fetch(URL_CSV+"&_="+Date.now()).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}).then(t=>{if(/^\s*<(!doctype|html)/i.test(t))throw new Error("la hoja pide iniciar sesión");return parseCSV(t)});
+
+function procesar(rows){
+  const head=rows[0].map(norm),idx={};
+  for(const k in CLAVES){const key=norm(CLAVES[k]);idx[k]=head.findIndex(h=>(k==="deporte"||k==="modalidad"||k==="ts")?h.startsWith(key):h.includes(key))}
+  if(idx.ts<0||idx.deporte<0)throw new Error("no se reconocieron las columnas del formulario");
+  DATA=rows.slice(1).filter(r=>r[idx.ts]&&r[idx.ts].trim()).map(r=>{
+    const o={};for(const k in CLAVES)o[k]=idx[k]>=0?(r[idx[k]]||"").trim():"";
+    o.fechaD=parseFecha(o.fecha)||parseFecha(o.ts);
+    o.deporte=cap(o.deporte);o.metodologo=cap(o.metodologo);o.ciudad=cap(o.ciudad);o.fase=cap(o.fase);
+    o.mujN=num(o.muj)||0;o.homN=num(o.hom)||0;o.cumplN=num(o.cumpl);
+    o.calif=[o.cumpl,o.ind_ent,o.ind_atl,o.esc,o.impl].map(num);return o});
+  DATA.sort((a,b)=>(b.fechaD||0)-(a.fechaD||0));
+  render();
+}
+function cargar(){
+  $("estado").textContent="CONECTANDO…";
+  viaScript().catch(e1=>viaCSV().catch(e2=>{throw new Error(e1.message+" | "+e2.message)}))
+  .then(rows=>{procesar(rows);$("err").style.display="none";$("estado").textContent="● CONECTADO "+new Date().toLocaleTimeString("es-CO")})
+  .catch(e=>{$("estado").textContent="○ SIN CONEXIÓN";$("err").style.display="block";
+    $("err").innerHTML="<b>No se pudo leer la hoja.</b> Detalle: "+esc(e.message)+".<br>1) En Google Sheets: Compartir → Acceso general → <b>«Cualquier persona con el enlace»</b> como <b>Lector</b>. 2) Verifica tu internet. 3) Alternativa: en la hoja usa Archivo → Descargar → CSV y cárgalo aquí: <input type='file' id='fCsv' accept='.csv'>";
+    $("fCsv").onchange=ev=>{const fr=new FileReader();fr.onload=()=>{try{procesar(parseCSV(fr.result));$("err").style.display="none";$("estado").textContent="CSV LOCAL CARGADO"}catch(x){alert(x.message)}};fr.readAsText(ev.target.files[0])}});
+}
+function llenarFiltros(){
+  // Listas en cascada: cada lista muestra solo las opciones que existen con los demás filtros activos
+  for(const k in SEL){const el=$(SEL[k]);
+    const c=conteo(filtrar(k).filter(x=>x[k]),k).sort((a,b)=>a[0].localeCompare(b[0],"es"));
+    if(F[k]&&!c.some(e=>e[0]===F[k]))c.push([F[k],0]);
+    el.innerHTML=`<option value="">TODOS: ${NOM[k]} (${c.length})</option>`+c.map(([v,n])=>`<option value="${esc(v)}">${esc(v)} · ${n}</option>`).join("");
+    el.value=F[k];el.classList.toggle("act",!!F[k])}
+}
+function filtrar(excl){
+  const t=norm($("fTxt").value);
+  return DATA.filter(x=>Object.keys(F).every(k=>k===excl||!F[k]||x[k]===F[k])&&(!t||norm(Object.values(x).filter(v=>typeof v==="string").join(" ")).includes(t)));
+}
+function toggle(k,v){F[k]=F[k]===v?"":v;render()}
+
+function conteo(arr,key){const o={};arr.forEach(x=>{const k=x[key]||"Sin dato";o[k]=(o[k]||0)+1});return Object.entries(o).sort((a,b)=>b[1]-a[1])}
+function topN(p,key,n=9){let s=p.slice(0,n);if(F[key]&&!s.some(e=>e[0]===F[key])){const e=p.find(e=>e[0]===F[key]);if(e)s.push(e)}return s}
+function barras(id,key,cls){
+  const p=topN(conteo(filtrar(key),key),key),max=Math.max(1,...p.map(e=>e[1]));
+  $(id).innerHTML=p.length?p.map(([l,v])=>`<div class="bar k ${F[key]===l?"sel":F[key]?"dim":""}" data-k="${key}" data-v="${esc(l)}" title="${esc(l)}"><span class="l">${esc(l)}</span><span class="t"><i class="${cls}" style="width:${v/max*100}%"></i></span><b>${v}</b></div>`).join(""):"<small>SIN DATOS</small>";
+}
+function render(){
+  llenarFiltros();
+  const f=filtrar(null);
+  const mu=f.reduce((s,x)=>s+x.mujN,0),ho=f.reduce((s,x)=>s+x.homN,0);
+  const kp=[[f.length,"VISITAS REALIZADAS"],[new Set(f.map(x=>x.deporte)).size,"DEPORTES VISITADOS"],[new Set(f.map(x=>x.metodologo)).size,"METODÓLOGOS"],[new Set(f.map(x=>x.ciudad)).size,"MUNICIPIOS"],[mu+ho,"ASISTENCIAS ATLETAS"],[mu,"ASISTENCIAS MUJERES"],[ho,"ASISTENCIAS HOMBRES"],[f1(avg(f.map(x=>x.cumplN))),"CUMPLIMIENTO PROM."]];
+  $("kpis").innerHTML=kp.map(([v,l])=>`<div class="card kpi"><b>${v}</b><span>${l}</span></div>`).join("");
+  barras("cDep","deporte","");barras("cMet","metodologo","am");barras("cCiu","ciudad","rj");barras("cFas","fase","am");
+  // asistencia
+  const a={};filtrar("deporte").forEach(x=>{a[x.deporte]=a[x.deporte]||[0,0];a[x.deporte][0]+=x.mujN;a[x.deporte][1]+=x.homN});
+  let as=Object.entries(a).sort((p,q)=>(q[1][0]+q[1][1])-(p[1][0]+p[1][1]));const ss=as.slice(0,9);
+  if(F.deporte&&!ss.some(e=>e[0]===F.deporte)){const e=as.find(e=>e[0]===F.deporte);if(e)ss.push(e)}
+  const mx=Math.max(1,...ss.map(([,v])=>v[0]+v[1]));
+  $("cAsi").innerHTML=ss.length?ss.map(([l,[w,m]])=>`<div class="bar k ${F.deporte===l?"sel":F.deporte?"dim":""}" data-k="deporte" data-v="${esc(l)}"><span class="l">${esc(l)}</span><span class="t"><i class="rj" style="width:${w/mx*100}%"></i><i style="width:${m/mx*100}%"></i></span><b>${w+m}</b></div>`).join(""):"<small>SIN DATOS</small>";
+  // calificaciones
+  const nm=["CUMPLIMIENTO OBJETIVO","INDUMENTARIA ENTRENADOR","INDUMENTARIA ATLETAS","ESCENARIO / SEDE","IMPLEMENTACIÓN"];
+  $("cCal").innerHTML=nm.map((n,i)=>{const v=avg(f.map(x=>x.calif[i]));return `<div class="bar"><span class="l">${n}</span><span class="t"><i class="${v>=4.5?"":v>=3?"am":"rj"}" style="width:${(v||0)/5*100}%"></i></span><b>${f1(v)}</b></div>`}).join("");
+  // tabla
+  const fl=(k,v)=>`<td class="fl ${F[k]===v?"sel":""}" data-k="${k}" data-v="${esc(v)}">${esc(v)}</td>`;
+  $("tb").innerHTML=f.map(x=>{const c=x.cumplN,col=c>=4.5?"var(--ok)":c>=3?"var(--am)":"var(--rj)";
+    return `<tr><td>${fmtFecha(x.fechaD)}</td>${fl("deporte",x.deporte)}<td>${esc(x.modalidad)}</td>${fl("ciudad",x.ciudad)}${fl("metodologo",x.metodologo)}<td>${esc(x.entrenador)}</td>${fl("fase",x.fase)}<td>${x.mujN}</td><td>${x.homN}</td><td><span class="pill" style="background:${col}">${c??"–"}</span></td><td class="no"><button class="ver" data-i="${DATA.indexOf(x)}">VER</button></td></tr>`}).join("")||`<tr><td colspan="11">SIN RESULTADOS</td></tr>`;
+  // chips
+  const ch=Object.keys(F).filter(k=>F[k]).map(k=>`<span class="chip" data-k="${k}">${NOM[k]}: ${esc(F[k])} ✕</span>`);
+  if($("fTxt").value)ch.push(`<span class="chip" data-k="txt">BÚSQUEDA: ${esc($("fTxt").value)} ✕</span>`);
+  $("chips").innerHTML=ch.join("");
+  $("pfil").textContent="REPORTE GENERADO: "+new Date().toLocaleString("es-CO")+" · FILTROS: "+(ch.length?ch.map(c=>c.replace(/<[^>]+>/g,"").replace(" ✕","")).join(" | "):"NINGUNO (TODOS LOS DATOS)")+" · "+f.length+" VISITAS";
+}
+
+/* Interactividad cruzada */
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-k]");
+  if(el&&el.dataset.k!=="txt"&&(el.classList.contains("bar")||el.classList.contains("fl"))){toggle(el.dataset.k,el.dataset.v);return}
+  if(el&&el.classList.contains("chip")){if(el.dataset.k==="txt"){$("fTxt").value="";render()}else toggle(el.dataset.k,F[el.dataset.k]);return}
+  const b=e.target.closest(".ver");if(b)detalle(DATA[+b.dataset.i]);
+});
+for(const k in SEL)$(SEL[k]).addEventListener("change",e=>{F[k]=e.target.value;render()});
+$("fTxt").addEventListener("input",render);
+$("bLimpiar").onclick=()=>{F={deporte:"",metodologo:"",ciudad:"",fase:""};$("fTxt").value="";render()};
+$("bAct").onclick=cargar;
+
+/* Detalle */
+const links=s=>(s||"").split(/,\s*/).filter(u=>/^https?:/.test(u)).map((u,i)=>`<a href="${esc(u)}" target="_blank" rel="noopener">Foto ${i+1}</a>`).join(" · ")||"–";
+function detalle(x){
+  $("mbox").innerHTML=`<h3>${esc(x.deporte)} – ${esc(x.modalidad)}</h3>
+  <p><b>Fecha:</b> ${fmtFecha(x.fechaD)} · <b>Ciudad:</b> ${esc(x.ciudad)} · <b>Sede:</b> ${esc(x.sede)}</p>
+  <p><b>Metodólogo:</b> ${esc(x.metodologo)} · <b>Entrenador:</b> ${esc(x.entrenador)}</p>
+  <p><b>Planificación:</b> ${esc(x.plan)} · ${esc(x.fase)} · Microciclo: ${esc(x.micro)}</p>
+  <p><b>Asistentes:</b> ${x.mujN} mujeres / ${x.homN} hombres (preselección: ${esc(x.pre)})</p>
+  <h4>Aspectos positivos</h4><p>${esc(x.pos)||"–"}</p><h4>Aspectos negativos</h4><p>${esc(x.neg)||"–"}</p>
+  <h4>Recomendaciones</h4><p>${esc(x.rec)||"–"}</p><h4>Evidencias</h4><p>Sede: ${links(x.foto_sede)}<br>Metodólogo: ${links(x.foto_met)}</p>
+  <p style="margin-top:16px"><button onclick="$('modal').style.display='none'">CERRAR</button></p>`;
+  $("modal").style.display="flex";
+}
+$("modal").addEventListener("click",e=>{if(e.target.id==="modal")e.target.style.display="none"});
+
+/* PDF (imprimir → Guardar como PDF) */
+let respaldo=null;
+function pdf(sinFiltros){
+  if(sinFiltros){respaldo={F:{...F},t:$("fTxt").value};F={deporte:"",metodologo:"",ciudad:"",fase:""};$("fTxt").value=""}
+  render();setTimeout(()=>window.print(),250);
+}
+window.addEventListener("afterprint",()=>{if(respaldo){F=respaldo.F;$("fTxt").value=respaldo.t;respaldo=null;render()}});
+$("bPdfF").onclick=()=>pdf(false);$("bPdfS").onclick=()=>pdf(true);
+
+cargar();setInterval(cargar,REFRESCO_MIN*60000);
+</script>
+</body>
+</html>
